@@ -5,13 +5,14 @@ Arquitectura monolitica para tienda ecologica:
 - Cliente web estatico.
 - API con Node.js + Express.
 - Base de datos SQLite.
-- Nginx como servidor frontal y reverse proxy.
+- Nginx + Apache combinados: Nginx frontal (rendimiento) y Apache para personalizacion con `.htaccess`.
 - HTTPS con SSL/TLS (Let's Encrypt o autofirmado para pruebas).
 
 ## Estructura
 
 - `public/`: cliente web.
 - `src/`: API y acceso a BD.
+- `apache/httpd.conf`: configuracion de Apache con `AllowOverride All`.
 - `nginx/active.conf`: configuracion activa usada por Nginx.
 - `nginx/https.conf.template`: plantilla SSL para dominio.
 - `docker-compose.yml`: stack monolitico.
@@ -40,6 +41,12 @@ npm run start:pedido
 ```
 
 ## Modo monolitico con Nginx (recomendado)
+
+Arquitectura combinada:
+
+- Nginx recibe peticiones de clientes y termina TLS.
+- Nginx enruta `/` hacia Apache (frontend y reglas `.htaccess`).
+- Nginx enruta `/api` hacia Node.js + Express.
 
 1. Levantar servicios:
 
@@ -86,6 +93,12 @@ Importa la coleccion:
 - `postman/tienda-eco.postman_collection.json`
 
 Con eso podras visualizar y probar el flujo cliente-servidor rapidamente.
+
+## Cuándo usar cada uno
+
+- Usa Apache si necesitas muchas configuraciones personalizadas con `.htaccess`.
+- Usa Nginx si tu prioridad es rendimiento y concurrencia.
+- Combinar ambos suele ser la mejor opcion en escenarios mixtos.
 
 ## HTTPS (SSL/TLS)
 
@@ -142,3 +155,20 @@ Por defecto usa `DOMAIN=localhost` si no existe `.env`.
 - API health: `https://tu-dominio.com/api/health`
 
 Si usas Postman con HTTPS autofirmado, desactiva temporalmente la verificacion SSL en Settings.
+
+## Monitoreo de rendimiento
+
+Comandos utiles:
+
+```bash
+npm run monitor:compose
+npm run monitor:ports
+```
+
+Monitoreo en tiempo real de CPU/RAM:
+
+```bash
+npm run monitor:top
+```
+
+Si `htop` no esta instalado en tu host, instala con `sudo apt install htop` y usa `netstat` como alternativa para conexiones.

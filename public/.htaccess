@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Si no existe el archivo/carpeta, se redirige a index.html (SPA)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]

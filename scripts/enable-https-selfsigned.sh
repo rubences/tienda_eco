@@ -27,4 +27,4 @@ cp "$ROOT_DIR/nginx/https.conf" "$ROOT_DIR/nginx/active.conf"
 
 docker compose "${COMPOSE_FILES[@]}" up -d --build
 
-echo "HTTPS con certificado autofirmado habilitado en https://${DOMAIN}"
+echo "HTTPS (Nginx + Apache) con certificado autofirmado habilitado en https://${DOMAIN}"

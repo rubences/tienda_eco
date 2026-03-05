@@ -19,8 +19,8 @@ mkdir -p "$ROOT_DIR/certbot/www" "$ROOT_DIR/certbot/conf"
 sed "s/__DOMAIN__/${DOMAIN}/g" "$ROOT_DIR/nginx/https.conf.template" > "$ROOT_DIR/nginx/https.conf"
 cp "$ROOT_DIR/nginx/http-challenge.conf" "$ROOT_DIR/nginx/active.conf"
 
-echo "[1/4] Levantando app + nginx en modo challenge HTTP..."
-docker compose "${COMPOSE_FILES[@]}" up -d --build app nginx
+echo "[1/4] Levantando app + apache + nginx en modo challenge HTTP..."
+docker compose "${COMPOSE_FILES[@]}" up -d --build app apache nginx
 
 echo "[2/4] Solicitando certificado Let's Encrypt para ${DOMAIN}..."
 docker compose "${COMPOSE_FILES[@]}" run --rm certbot certonly \
