@@ -16,7 +16,7 @@
     "monitor:start": "bash scripts/start-monitoring.sh",
     "monitor:compose": "docker compose ps",
     "monitor:compose:all": "docker compose -f docker-compose.yml -f docker-compose.monitoring.yml ps",
-    "monitor:ports": "netstat -tulpen | grep -E ':80|:443|:8080|:3000|:19999' || true",
+    "monitor:ports": "netstat -tulpen | grep -E ':80|:443|:8080|:3000|:19999|:9090|:3001' || true",
     "monitor:top": "htop",
     "test": "echo \"Sin tests automatizados\" && exit 0"
   },

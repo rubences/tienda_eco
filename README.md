@@ -202,6 +202,15 @@ Servicios añadidos:
 - `prometheus`: `http://localhost:9090`
 - `grafana`: `http://localhost:3001` (`admin/admin`)
 
+Provisioning automatico incluido:
+
+- Datasource `Prometheus` creado automaticamente.
+- Dashboard `Tienda Eco Overview` cargado automaticamente.
+
+URL directa del dashboard:
+
+- `http://localhost:3001/d/tienda-eco-overview/tienda-eco-overview`
+
 Arranque:
 
 ```bash
