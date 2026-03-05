@@ -7,6 +7,9 @@
     "start:api": "node src/server.js",
     "start:hola": "node hola_mundo.js",
     "start:pedido": "node pedido.js",
+    "https:enable": "bash scripts/enable-https-letsencrypt.sh",
+    "https:renew": "bash scripts/renew-https-letsencrypt.sh",
+    "https:selfsigned": "bash scripts/enable-https-selfsigned.sh",
     "test": "echo \"Sin tests automatizados\" && exit 0"
   },
   "repository": {

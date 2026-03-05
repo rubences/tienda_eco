@@ -6,13 +6,16 @@ Arquitectura monolitica para tienda ecologica:
 - API con Node.js + Express.
 - Base de datos SQLite.
 - Nginx como servidor frontal y reverse proxy.
+- HTTPS con SSL/TLS (Let's Encrypt o autofirmado para pruebas).
 
 ## Estructura
 
 - `public/`: cliente web.
 - `src/`: API y acceso a BD.
-- `nginx/default.conf`: configuracion de Nginx.
+- `nginx/active.conf`: configuracion activa usada por Nginx.
+- `nginx/https.conf.template`: plantilla SSL para dominio.
 - `docker-compose.yml`: stack monolitico.
+- `docker-compose.https.yml`: override para puertos 80/443 y certificados.
 - `postman/tienda-eco.postman_collection.json`: coleccion para pruebas.
 
 ## Requisitos
@@ -21,6 +24,7 @@ Arquitectura monolitica para tienda ecologica:
 - npm.
 - Docker y Docker Compose (para el modo con Nginx).
 - Postman (opcional, para pruebas visuales de peticiones).
+- Dominio publico apuntando al servidor (solo para Let's Encrypt).
 
 ## Instalacion
 
@@ -82,3 +86,59 @@ Importa la coleccion:
 - `postman/tienda-eco.postman_collection.json`
 
 Con eso podras visualizar y probar el flujo cliente-servidor rapidamente.
+
+## HTTPS (SSL/TLS)
+
+`HTTPS = HTTP + SSL/TLS`: cifra la comunicacion, valida identidad del servidor y es clave para SEO, confianza del usuario y cumplimiento de normativas.
+
+Tienes dos modos:
+
+- Produccion: certificado gratuito de Let's Encrypt (autoridad certificadora real).
+- Pruebas: certificado autofirmado.
+
+### 1) Let's Encrypt (produccion)
+
+Requisitos:
+
+- Tu dominio debe resolver al servidor.
+- Puertos `80` y `443` abiertos.
+
+Configura variables:
+
+```bash
+cp .env.example .env
+```
+
+Edita `.env` con:
+
+```bash
+DOMAIN=tu-dominio.com
+EMAIL=admin@tu-dominio.com
+```
+
+Habilitar HTTPS:
+
+```bash
+npm run https:enable
+```
+
+Renovar certificados:
+
+```bash
+npm run https:renew
+```
+
+### 2) Certificado autofirmado (pruebas)
+
+```bash
+npm run https:selfsigned
+```
+
+Por defecto usa `DOMAIN=localhost` si no existe `.env`.
+
+### Verificaciones recomendadas
+
+- Navegador: `https://tu-dominio.com`
+- API health: `https://tu-dominio.com/api/health`
+
+Si usas Postman con HTTPS autofirmado, desactiva temporalmente la verificacion SSL en Settings.
