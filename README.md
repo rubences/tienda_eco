@@ -1,43 +1,84 @@
 # tienda_eco
 
-Script de práctica backend en Node.js para procesar un pedido en una tienda de productos ecológicos.
+Arquitectura monolitica para tienda ecologica:
+
+- Cliente web estatico.
+- API con Node.js + Express.
+- Base de datos SQLite.
+- Nginx como servidor frontal y reverse proxy.
+
+## Estructura
+
+- `public/`: cliente web.
+- `src/`: API y acceso a BD.
+- `nginx/default.conf`: configuracion de Nginx.
+- `docker-compose.yml`: stack monolitico.
+- `postman/tienda-eco.postman_collection.json`: coleccion para pruebas.
 
 ## Requisitos
 
-- Node.js instalado.
-- npm disponible.
+- Node.js 20+.
+- npm.
+- Docker y Docker Compose (para el modo con Nginx).
+- Postman (opcional, para pruebas visuales de peticiones).
 
-## Instalación
+## Instalacion
 
 ```bash
 npm install
 ```
 
-## Ejecución
-
-### 1) Script inicial "Hola mundo"
+## Ejecucion rapida de scripts iniciales
 
 ```bash
-node hola_mundo.js
+npm run start:hola
+npm run start:pedido
 ```
 
-Salida esperada:
+## Modo monolitico con Nginx (recomendado)
 
-```text
-Hola mundo
-```
-
-### 2) Procesamiento del pedido
+1. Levantar servicios:
 
 ```bash
-node pedido.js
+docker compose up --build
 ```
 
-El script `pedido.js` realiza:
+2. Abrir cliente web:
 
-- Normalización del nombre del cliente en mayúsculas.
-- Verificación de productos frágiles con `.includes()`.
-- Validación de stock de cada producto.
-- Cálculo de subtotal, descuento del 5% (si supera 100€), IVA del 21% y total final.
-- Cálculo de fecha estimada de entrega con `dayjs` (+3 días).
-- Impresión del resumen con Template Literals.
+- `http://localhost:8080`
+
+3. Endpoints API (via Nginx):
+
+- `GET http://localhost:8080/api/health`
+- `GET http://localhost:8080/api/productos`
+- `POST http://localhost:8080/api/pedidos`
+
+Body ejemplo para crear pedido:
+
+```json
+{
+	"cliente": "Ana Perez",
+	"items": [
+		{ "productoId": 1, "cantidad": 2 },
+		{ "productoId": 2, "cantidad": 1 }
+	]
+}
+```
+
+## Modo solo API (sin Nginx)
+
+```bash
+npm run start:api
+```
+
+API en:
+
+- `http://localhost:3000/api/health`
+
+## Postman
+
+Importa la coleccion:
+
+- `postman/tienda-eco.postman_collection.json`
+
+Con eso podras visualizar y probar el flujo cliente-servidor rapidamente.

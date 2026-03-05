@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda Eco - Cliente</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Tienda Eco</h1>
+      <p>Cliente web monolitico conectado a API Express por Nginx.</p>
+
+      <section>
+        <h2>Productos</h2>
+        <button id="btn-recargar" type="button">Recargar productos</button>
+        <pre id="productos"></pre>
+      </section>
+
+      <section>
+        <h2>Crear pedido</h2>
+        <form id="pedido-form">
+          <label>
+            Cliente
+            <input name="cliente" value="Juan Lopez" required />
+          </label>
+          <label>
+            Producto ID
+            <input name="productoId" type="number" min="1" value="1" required />
+          </label>
+          <label>
+            Cantidad
+            <input name="cantidad" type="number" min="1" value="1" required />
+          </label>
+          <button type="submit">Enviar pedido</button>
+        </form>
+        <pre id="resultado"></pre>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

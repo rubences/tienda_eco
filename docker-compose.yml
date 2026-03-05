@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      context: .
+    container_name: tienda-eco-app
+    environment:
+      - PORT=3000
+    volumes:
+      - ./data:/app/data
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: tienda-eco-nginx
+    depends_on:
+      - app
+    ports:
+      - '8080:80'
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./public:/usr/share/nginx/html:ro

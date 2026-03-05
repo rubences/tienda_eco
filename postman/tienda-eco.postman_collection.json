@@ -1,0 +1,59 @@
+{
+  "info": {
+    "name": "Tienda Eco API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "health"]
+        }
+      }
+    },
+    {
+      "name": "Listar productos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/productos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "productos"]
+        }
+      }
+    },
+    {
+      "name": "Crear pedido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cliente\": \"Ana Perez\",\n  \"items\": [\n    { \"productoId\": 1, \"cantidad\": 2 },\n    { \"productoId\": 2, \"cantidad\": 1 }\n  ]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/pedidos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "pedidos"]
+        }
+      }
+    }
+  ]
+}
