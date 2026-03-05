@@ -17,7 +17,7 @@ fi
 mkdir -p "$ROOT_DIR/certbot/www" "$ROOT_DIR/certbot/conf"
 
 sed "s/__DOMAIN__/${DOMAIN}/g" "$ROOT_DIR/nginx/https.conf.template" > "$ROOT_DIR/nginx/https.conf"
-cp "$ROOT_DIR/nginx/http-challenge.conf" "$ROOT_DIR/nginx/active.conf"
+cp "$ROOT_DIR/nginx/http-challenge.conf" "$ROOT_DIR/nginx/nginx.conf"
 
 echo "[1/4] Levantando app + apache + nginx en modo challenge HTTP..."
 docker compose "${COMPOSE_FILES[@]}" up -d --build app apache nginx
@@ -31,6 +31,7 @@ docker compose "${COMPOSE_FILES[@]}" run --rm certbot certonly \
 
 echo "[3/4] Activando configuracion HTTPS en Nginx..."
 cp "$ROOT_DIR/nginx/https.conf" "$ROOT_DIR/nginx/active.conf"
+cp "$ROOT_DIR/nginx/https.conf" "$ROOT_DIR/nginx/nginx.conf"
 docker compose "${COMPOSE_FILES[@]}" up -d nginx
 
 echo "[4/4] HTTPS habilitado."

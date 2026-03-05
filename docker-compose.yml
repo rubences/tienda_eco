@@ -15,16 +15,24 @@ services:
       - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
       - ./public:/usr/local/apache2/htdocs:ro
 
+  apache2:
+    image: httpd:2.4-alpine
+    container_name: tienda-eco-apache-2
+    volumes:
+      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - ./public:/usr/local/apache2/htdocs:ro
+
   nginx:
     image: nginx:1.27-alpine
     container_name: tienda-eco-nginx
     depends_on:
       - app
       - apache
+      - apache2
     ports:
       - '8080:80'
     volumes:
-      - ./nginx/active.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - nginx_logs:/var/log/nginx
 
 volumes:

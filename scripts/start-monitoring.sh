@@ -15,17 +15,19 @@ if [[ -z "${AMPLIFY_API_KEY:-}" ]]; then
   docker compose \
     -f "$ROOT_DIR/docker-compose.yml" \
     -f "$ROOT_DIR/docker-compose.monitoring.yml" \
-    up -d netdata
+    up -d netdata nginx-exporter prometheus grafana
 else
   docker compose \
     --profile amplify \
     -f "$ROOT_DIR/docker-compose.yml" \
     -f "$ROOT_DIR/docker-compose.monitoring.yml" \
-    up -d netdata amplify-agent
+    up -d netdata nginx-exporter prometheus grafana amplify-agent
 fi
 
 echo "Monitoreo activo:"
 echo "- Netdata: http://localhost:19999"
+echo "- Prometheus: http://localhost:9090"
+echo "- Grafana: http://localhost:3001 (admin/admin)"
 if [[ -n "${AMPLIFY_API_KEY:-}" ]]; then
   echo "- Amplify Agent: contenedor tienda-eco-amplify"
 else

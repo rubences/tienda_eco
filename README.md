@@ -5,7 +5,7 @@ Arquitectura monolitica para tienda ecologica:
 - Cliente web estatico.
 - API con Node.js + Express.
 - Base de datos SQLite.
-- Nginx + Apache combinados: Nginx frontal (rendimiento) y Apache para personalizacion con `.htaccess`.
+- Nginx + Apache combinados: Nginx frontal (proxy inverso y balanceador) y Apache para personalizacion con `.htaccess`.
 - HTTPS con SSL/TLS (Let's Encrypt o autofirmado para pruebas).
 
 ## Estructura
@@ -13,11 +13,12 @@ Arquitectura monolitica para tienda ecologica:
 - `public/`: cliente web.
 - `src/`: API y acceso a BD.
 - `apache/httpd.conf`: configuracion de Apache con `AllowOverride All`.
-- `nginx/active.conf`: configuracion activa usada por Nginx.
+- `nginx/nginx.conf`: configuracion principal de Nginx (proxy inverso + upstream).
+- `nginx/active.conf`: compatibilidad para flujos SSL existentes.
 - `nginx/https.conf.template`: plantilla SSL para dominio.
 - `docker-compose.yml`: stack monolitico.
 - `docker-compose.https.yml`: override para puertos 80/443 y certificados.
-- `docker-compose.monitoring.yml`: stack de monitoreo (Amplify + Netdata).
+- `docker-compose.monitoring.yml`: stack de monitoreo (Amplify + Netdata + Prometheus + Grafana).
 - `postman/tienda-eco.postman_collection.json`: coleccion para pruebas.
 
 ## Requisitos
@@ -46,7 +47,7 @@ npm run start:pedido
 Arquitectura combinada:
 
 - Nginx recibe peticiones de clientes y termina TLS.
-- Nginx enruta `/` hacia Apache (frontend y reglas `.htaccess`).
+- Nginx enruta `/` hacia `upstream apache_backends` (dos instancias Apache simuladas).
 - Nginx enruta `/api` hacia Node.js + Express.
 
 1. Levantar servicios:
@@ -165,6 +166,60 @@ Comandos utiles:
 npm run monitor:compose
 npm run monitor:compose:all
 npm run monitor:ports
+```
+
+## Nginx proxy inverso y balanceador basico
+
+Puntos implementados:
+
+- Nginx expuesto en `http://localhost:8080`.
+- `upstream apache_backends` con dos backends:
+	- `apache:80`
+	- `apache2:80`
+- `proxy_pass` a upstream en `location /`.
+- `proxy_pass` a Express en `location /api`.
+
+Verificar redireccion con `curl -I`:
+
+```bash
+npm run verify:redirects
+```
+
+Comprobacion manual:
+
+```bash
+curl -I http://localhost:8080/legacy
+curl -I http://localhost:8080/
+```
+
+Deberas ver `301` para `/legacy` y cabeceras `X-Upstream-*` para `/`.
+
+## Grafana + Prometheus
+
+Servicios añadidos:
+
+- `nginx-exporter`: expone metricas de Nginx para Prometheus.
+- `prometheus`: `http://localhost:9090`
+- `grafana`: `http://localhost:3001` (`admin/admin`)
+
+Arranque:
+
+```bash
+npm run monitor:start
+```
+
+## loadtest / ApacheBench
+
+Prueba con ApacheBench:
+
+```bash
+npm run bench:ab
+```
+
+Prueba con loadtest:
+
+```bash
+npm run bench:loadtest
 ```
 
 Monitoreo en tiempo real de CPU/RAM:

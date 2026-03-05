@@ -24,6 +24,7 @@ fi
 
 sed "s/__DOMAIN__/${DOMAIN}/g" "$ROOT_DIR/nginx/https.conf.template" > "$ROOT_DIR/nginx/https.conf"
 cp "$ROOT_DIR/nginx/https.conf" "$ROOT_DIR/nginx/active.conf"
+cp "$ROOT_DIR/nginx/https.conf" "$ROOT_DIR/nginx/nginx.conf"
 
 docker compose "${COMPOSE_FILES[@]}" up -d --build
 

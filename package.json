@@ -11,6 +11,8 @@
     "https:renew": "bash scripts/renew-https-letsencrypt.sh",
     "https:selfsigned": "bash scripts/enable-https-selfsigned.sh",
     "bench:ab": "bash scripts/ab-benchmark.sh",
+    "bench:loadtest": "loadtest -n 500 -c 50 http://localhost:8080/api/health",
+    "verify:redirects": "bash scripts/verify-redirects.sh",
     "monitor:start": "bash scripts/start-monitoring.sh",
     "monitor:compose": "docker compose ps",
     "monitor:compose:all": "docker compose -f docker-compose.yml -f docker-compose.monitoring.yml ps",
@@ -34,5 +36,8 @@
     "dayjs": "^1.11.19",
     "express": "^5.2.1",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "loadtest": "^8.2.1"
   }
 }
