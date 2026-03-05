@@ -17,6 +17,7 @@ Arquitectura monolitica para tienda ecologica:
 - `nginx/https.conf.template`: plantilla SSL para dominio.
 - `docker-compose.yml`: stack monolitico.
 - `docker-compose.https.yml`: override para puertos 80/443 y certificados.
+- `docker-compose.monitoring.yml`: stack de monitoreo (Amplify + Netdata).
 - `postman/tienda-eco.postman_collection.json`: coleccion para pruebas.
 
 ## Requisitos
@@ -162,6 +163,7 @@ Comandos utiles:
 
 ```bash
 npm run monitor:compose
+npm run monitor:compose:all
 npm run monitor:ports
 ```
 
@@ -172,3 +174,57 @@ npm run monitor:top
 ```
 
 Si `htop` no esta instalado en tu host, instala con `sudo apt install htop` y usa `netstat` como alternativa para conexiones.
+
+## Integracion solicitada: ab + Nginx Amplify + Netdata
+
+### Apache Benchmark (ab)
+
+Benchmark rapido por defecto:
+
+```bash
+npm run bench:ab
+```
+
+Benchmark custom (`URL`, `requests`, `concurrency`):
+
+```bash
+bash scripts/ab-benchmark.sh http://localhost:8080/api/health 500 50
+```
+
+El script usa `ab` local si existe; si no, levanta una imagen Docker con ApacheBench automaticamente.
+
+### Nginx Amplify
+
+1. Registra tu servidor en Nginx Amplify y copia el `API Key`.
+2. Define en `.env`:
+
+```bash
+AMPLIFY_API_KEY=tu_api_key_de_nginx_amplify
+```
+
+3. Arranca monitoreo:
+
+```bash
+npm run monitor:start
+```
+
+Nginx expone internamente `http://nginx/nginx_status` para que el agente capture metricas.
+
+### Netdata
+
+Con el mismo comando se levanta Netdata:
+
+```bash
+npm run monitor:start
+```
+
+Dashboard:
+
+- `http://localhost:19999`
+
+### Verificacion rapida
+
+```bash
+npm run monitor:compose
+npm run monitor:ports
+```
