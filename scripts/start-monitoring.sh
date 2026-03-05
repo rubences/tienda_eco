@@ -10,14 +10,24 @@ fi
 
 if [[ -z "${AMPLIFY_API_KEY:-}" ]]; then
   echo "WARN: AMPLIFY_API_KEY no esta definido en .env."
-  echo "El servicio amplify-agent arrancara pero no podra enviar metricas."
-fi
+  echo "Se levantara solo Netdata. Para Amplify, define la clave y relanza el comando."
 
-docker compose \
-  -f "$ROOT_DIR/docker-compose.yml" \
-  -f "$ROOT_DIR/docker-compose.monitoring.yml" \
-  up -d netdata amplify-agent
+  docker compose \
+    -f "$ROOT_DIR/docker-compose.yml" \
+    -f "$ROOT_DIR/docker-compose.monitoring.yml" \
+    up -d netdata
+else
+  docker compose \
+    --profile amplify \
+    -f "$ROOT_DIR/docker-compose.yml" \
+    -f "$ROOT_DIR/docker-compose.monitoring.yml" \
+    up -d netdata amplify-agent
+fi
 
 echo "Monitoreo activo:"
 echo "- Netdata: http://localhost:19999"
-echo "- Amplify Agent: contenedor tienda-eco-amplify"
+if [[ -n "${AMPLIFY_API_KEY:-}" ]]; then
+  echo "- Amplify Agent: contenedor tienda-eco-amplify"
+else
+  echo "- Amplify Agent: pendiente (configura AMPLIFY_API_KEY)"
+fi

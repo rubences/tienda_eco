@@ -210,6 +210,8 @@ npm run monitor:start
 
 Nginx expone internamente `http://nginx/nginx_status` para que el agente capture metricas.
 
+Nota: si no defines `AMPLIFY_API_KEY`, el comando inicia solo Netdata y deja Amplify pendiente.
+
 ### Netdata
 
 Con el mismo comando se levanta Netdata:

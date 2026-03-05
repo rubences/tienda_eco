@@ -2,10 +2,12 @@ services:
   amplify-agent:
     image: nginxinc/amplify-agent:latest
     container_name: tienda-eco-amplify
+    profiles:
+      - amplify
     depends_on:
       - nginx
     environment:
-      - API_KEY=${AMPLIFY_API_KEY}
+      - API_KEY=${AMPLIFY_API_KEY:-}
       - NGINX_STATUS_URL=http://nginx/nginx_status
     volumes:
       - nginx_logs:/var/log/nginx:ro
